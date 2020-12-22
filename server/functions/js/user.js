@@ -1,9 +1,9 @@
-import { admin } from "../index.js";
+import { admin } from '../index.js';
 const express = require('express');
 const app = express();
 var auth = firebase.auth();
 
-export function user(id, pw) {
+function user(id, pw) {
     this.id = id;
     this.pw = pw;
 };
@@ -21,13 +21,6 @@ function SignUp(user) {
     auth.createUserWithEmailAndPassword(id.value, pw.value);
     promise.catch(e => alert.message);
     alert("Sign Up");
-}
+};
 
-//temporary
-var signUp = document.querySelector("#signUp");
-signUp.onclick = () => {
-    var inputId = document.querySelector("#id").value;
-    var inputPw = document.querySelector("#pw").value;
-    let temp = user(inputId, inputPw);
-    SignUp(temp);
-}
+export { user };
