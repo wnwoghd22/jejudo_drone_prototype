@@ -1,6 +1,4 @@
 import { admin } from '../index.js';
-const express = require('express');
-const app = express();
 var auth = firebase.auth();
 
 function user(id, pw) {
@@ -12,15 +10,27 @@ const anonymous = {
     pw: "00000000"
 };
 
-const checkUser = (req, res, next) => {
-
-};
 function SignUp(user) {
     let id = user.id;
     let pw = user.pw;
-    auth.createUserWithEmailAndPassword(id.value, pw.value);
-    promise.catch(e => alert.message);
+    auth.createUserWithEmailAndPassword(id, pw);
+    promise.catch(e => alert(e.message));
     alert("Sign Up");
 };
+const checkUser = (req, res, next) => {
 
-export { user };
+};
+export { app, user };
+
+//temporary
+var signUp = document.querySelector("#signUp");
+signUp.onclick = () => {
+    var inputId = document.querySelector("#id").value;
+    var inputPw = document.querySelector("#pw").value;
+    let temp = new user(inputId, inputPw);
+    SignUp(temp);
+}
+
+function SignIn(user) {
+    
+}
