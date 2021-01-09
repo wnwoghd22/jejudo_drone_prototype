@@ -1,4 +1,4 @@
-import { admin } from '../index.js';
+/*import { admin } from '../index.js';
 var auth = firebase.auth();
 
 function user(id, pw) {
@@ -33,4 +33,4 @@ signUp.onclick = () => {
 
 function SignIn(user) {
     
-}
+}*/
