@@ -1,8 +1,3 @@
-//import { app } from './js/app.js';
-
-//var auth = firebase.auth();
-//var promise = require('promise');
-
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp({databaseURL:`https://jejudo-drone-prototype-default-rtdb.firebaseio.com/`});
@@ -13,6 +8,7 @@ const app = express();
 const cors = require('cors')({origin: true});
 app.use(cors);
 
+var auth = firebase.auth();
 const anonymous = {
     id : "anon",
     name : "Anonymous"
@@ -51,11 +47,26 @@ app.get('/announcements', (req, res) => {
         res.send({announcements: items});
     })
 });
+app.get('/announcements/:key', (req, res) => {
+    let key = req.params.key;
+    let listRef = admin.database().ref(`announcements/${key}`);
+    listRef.once('value', function(snapshot) {
+        console.log(snapshot);
+        let item = snapshot.val();
+        item.id = snapshot.key;
+        res.header('Content-Type', 'application/json; charset = utf-8');
+        res.send({content: item});
+    })
+});
 app.post('/announcements', (req, res) => {
     let contents = {
+        title: req.body.title,
         date: new Date().toJSON(),
+        writer: {
+            id: req.body.writer.id,
+            name: req.body.writer.name
+        },
         body: req.body.body,
-        user: req.body.user
     };
     let listRef = admin.database().ref(`announcements`);
     listRef.push(contents);
