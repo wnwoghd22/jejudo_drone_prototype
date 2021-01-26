@@ -1,3 +1,4 @@
+//const auth = require('firebase/auth');
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp({databaseURL:`https://jejudo-drone-prototype-default-rtdb.firebaseio.com/`});
@@ -8,7 +9,7 @@ const app = express();
 const cors = require('cors')({origin: true});
 app.use(cors);
 
-var auth = firebase.auth();
+//var auth = firebase.auth();
 const anonymous = {
     id : "anon",
     name : "Anonymous"
