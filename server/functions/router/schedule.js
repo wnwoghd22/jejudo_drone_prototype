@@ -7,7 +7,7 @@ date = Date().date
 part = {
     morning,
     noon,
-    evening,
+    day,
 }
 */
 

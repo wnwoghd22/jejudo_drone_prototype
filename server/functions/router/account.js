@@ -16,6 +16,22 @@ router.get('/', (req, res) => {
         res.send({accounts: items});
     })
 });
+router.get('/:key', (req, res) => {
+    let key = req.params.key;
+    let listRef = admin.database().ref(`account/${key}`);
+    listRef.once('value', function(snapshot) {
+        if(snapshot.exists) {
+            let item = snapshot.val();
+            item.id = snapshot.key;
+
+            res.header('Content-Type', 'application/json; charset = utf-8');
+            res.send({account: item});
+        }
+        else {
+            res.send({account: null});
+        }
+    })
+});
 router.get('/:key/schedule', (req, res) => {
     let key = req.params.key;
     let listRef = admin.database().ref(`account/${key}/schedule`);
