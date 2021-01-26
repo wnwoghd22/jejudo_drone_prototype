@@ -2,6 +2,7 @@ const admin = require('firebase-admin');
 const express = require('express');
 const router = express.Router();
 
+//announcements/
 router.get('/', (req, res) => {
     let listRef = admin.database().ref('announcements');
     listRef.once('value', function(snapshot) {
@@ -40,6 +41,11 @@ router.post('/', (req, res) => {
     listRef.push(contents);
     res.header('Content-Type', 'application/json; charset = utf-8');
     res.status(201).send({result: "post complete"});
+});
+router.delete('/:key', (req, res) => {
+    let key = req.params.key;
+    let listRef = admin.database().ref(`announcements/${key}`);
+    listRef.remove();
 });
 
 module.exports = router;

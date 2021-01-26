@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 
 /*
-day = Date()
+date = Date().date
 part = {
     morning,
     noon,

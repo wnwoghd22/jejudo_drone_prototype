@@ -11,7 +11,7 @@ app.use(cors);
 var CheckUser = require('./router/checkUser');
 app.use(CheckUser);
 
-var announcements = require('./router/announcement');
+var announcements = require('./router/announcements');
 var account = require('./router/account');
 var schedule = require('./router/schedule');
 
