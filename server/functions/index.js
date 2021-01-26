@@ -30,6 +30,7 @@ const CheckUser = (req, res, next) => {
         });
     }
     else {
+        console.log(req.query.auth_token);
         next();
     }
 }
@@ -74,12 +75,19 @@ app.post('/announcements', (req, res) => {
     res.header('Content-Type', 'application/json; charset = utf-8');
     res.status(201).send({result: "post complete"});
 });
-function initAnnounceList() {
-    let listRef = admin.database().ref('announcements');
-    listRef = {
-        
-    };
-    //temporary
-}
+app.get('/account/:name', (req, res) => {
+
+});
+app.post('/account', (req, res) => {
+
+});
+app.get('/schedule', (req, res) => {
+
+});
+app.post('/schedule', (req, res) => {
+    
+});
+
+
 
 exports.v1 = functions.https.onRequest(app);
