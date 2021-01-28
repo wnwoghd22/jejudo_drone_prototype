@@ -21,7 +21,28 @@ router.post('/', (req, res) => {
     
 });
 router.post('/:date/:part', (req, res) => {
-    
+    let _date = req.params.date;
+    let _part = req.params.part;
+
+    let temp;
+
+    let studentRef = admin.database().ref(`accounts/${req.body.id}`);
+    studentRef.once('value', function(snapshot) {
+        //console.log("value: ", snapshot);
+
+        temp = snapshot.val();
+        //console.log("temp: ", temp);
+        
+        let content = {
+            name: temp.name,
+        };
+        //console.log("content", content);
+
+        let listRef = admin.database().ref(`schedule/${_date}/${_part}`);
+        listRef.push(content);
+        res.header('Content-Type', 'application/json; charset = utf-8');
+        res.status(201).send({result: "post complete"});
+    });
 });
 
 module.exports = router;

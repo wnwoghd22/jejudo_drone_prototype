@@ -57,5 +57,17 @@ router.post('/', (req, res) => {
     res.header('Content-Type', 'application/json; charset = utf-8');
     res.status(201).send({result: "create account complete"});
 });
+router.post('/:key/schedule', (req, res) => {
+    let key = req.params.key;
+    let data = {
+        date: req.body.date,
+        part: req.body.part,
+    }
+    let listRef = admin.database().ref(`accounts/${key}/schedule`);
+    //listRef.child('schedule').push(data);
+    listRef.push(data);
+    res.header('Content-Type', 'application/json; charset = utf-8');
+    res.status(201).send({result: "push schedule complete"});
+});
 
 module.exports = router;
