@@ -12,11 +12,11 @@ var CheckUser = require('./router/checkUser');
 app.use(CheckUser);
 
 var announcements = require('./router/announcements');
-var account = require('./router/account');
+var accounts = require('./router/accounts');
 var schedule = require('./router/schedule');
 
 app.use('/announcements', announcements);
-app.use('/account', account);
+app.use('/accounts', accounts);
 app.use('/schedule', schedule);
 
 exports.v1 = functions.https.onRequest(app);

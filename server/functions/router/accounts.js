@@ -4,7 +4,7 @@ const router = express.Router();
 
 //account/
 router.get('/', (req, res) => {
-    let listRef = admin.database().ref('account');
+    let listRef = admin.database().ref('accounts');
     listRef.once('value', function(snapshot) {
         let items = new Array();
         snapshot.forEach(function(childSnapshot) {
@@ -18,7 +18,7 @@ router.get('/', (req, res) => {
 });
 router.get('/:key', (req, res) => {
     let key = req.params.key;
-    let listRef = admin.database().ref(`account/${key}`);
+    let listRef = admin.database().ref(`accounts/${key}`);
     listRef.once('value', function(snapshot) {
         if(snapshot.exists) {
             let item = snapshot.val();
@@ -34,7 +34,7 @@ router.get('/:key', (req, res) => {
 });
 router.get('/:key/schedule', (req, res) => {
     let key = req.params.key;
-    let listRef = admin.database().ref(`account/${key}/schedule`);
+    let listRef = admin.database().ref(`accounts/${key}/schedule`);
     listRef.once('value', function(snapshot) {
         let items = new Array();
         snapshot.forEach(function(childSnapshot) {
@@ -49,12 +49,11 @@ router.get('/:key/schedule', (req, res) => {
 router.post('/', (req, res) => {
     let data = {
         name: req.body.name,
-        id: req.body.id,
         authority: 'student',
         schedule: [],
     };
-    let listRef = admin.database().ref('account');
-    listRef.push(data);
+    let listRef = admin.database().ref('accounts');
+    listRef.child(req.body.id).set(data);
     res.header('Content-Type', 'application/json; charset = utf-8');
     res.status(201).send({result: "create account complete"});
 });
