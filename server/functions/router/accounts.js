@@ -47,13 +47,14 @@ router.get('/:key/schedule', (req, res) => {
     })
 });
 router.post('/', (req, res) => {
-    let data = {
+    /*let data = {
         name: req.body.name,
         authority: 'student',
         schedule: [],
-    };
+    };*/
     let listRef = admin.database().ref('accounts');
-    listRef.child(req.body.id).set(data);
+    listRef.child(req.body.id).child('name').set(req.body.name);
+    listRef.child(req.body.id).child('authority').set('student');
     res.header('Content-Type', 'application/json; charset = utf-8');
     res.status(201).send({result: "create account complete"});
 });
@@ -63,11 +64,40 @@ router.post('/:key/schedule', (req, res) => {
         date: req.body.date,
         part: req.body.part,
     }
+    let flag = false;
     let listRef = admin.database().ref(`accounts/${key}/schedule`);
-    //listRef.child('schedule').push(data);
-    listRef.push(data);
-    res.header('Content-Type', 'application/json; charset = utf-8');
-    res.status(201).send({result: "push schedule complete"});
+    listRef.once('value', function(snapshot) {
+        snapshot.forEach(function(child) {
+            let temp = child.val();
+            if(temp.date === data.date) {
+                if(temp.part === data.part) {
+                    flag = true;
+                }
+            }
+        });
+        console.log('flag: ', flag);
+        if(!flag) {
+            console.log("new schedule");
+            listRef.push(data);
+        }
+        res.header('Content-Type', 'application/json; charset = utf-8');
+        if(flag === true) { res.status(201).send({result: "already exist"}); }
+        else { res.status(201).send({result: "push schedule complete"}); }
+    });
 });
+router.delete('/:key', (req, res) => {
+    let key = req.params.key;
+    let ref = admin.database().ref(`accounts/${key}`);
+    ref.remove();
+    res.status(201).send({result: "delete complete"});
+});
+/*
+router.delete('/:key/schedule', (req, res) => {
+    let key = req.params.key;
+    let ref = admin.database().ref(`accounts/${key}/schedule`);
+    
+    ref.remove();
+    res.status(201).send({result: "delete complete"});
+});*/
 
 module.exports = router;

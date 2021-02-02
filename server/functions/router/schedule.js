@@ -35,6 +35,7 @@ router.post('/:date/:part', (req, res) => {
         
         let content = {
             name: temp.name,
+            //key: temp.key?
         };
         //console.log("content", content);
 
