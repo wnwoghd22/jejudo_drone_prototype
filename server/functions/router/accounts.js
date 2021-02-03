@@ -81,8 +81,11 @@ router.post('/:key/schedule', (req, res) => {
             listRef.push(data);
         }
         res.header('Content-Type', 'application/json; charset = utf-8');
-        if(flag === true) { res.status(201).send({result: "already exist"}); }
-        else { res.status(201).send({result: "push schedule complete"}); }
+        res.send(
+            !flag ?
+            {result: "push schedule complete"}
+            : {result: "already exist"}
+        );
     });
 });
 router.delete('/:key', (req, res) => {
