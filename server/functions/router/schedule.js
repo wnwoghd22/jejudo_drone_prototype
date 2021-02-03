@@ -24,26 +24,23 @@ router.post('/:date/:part', (req, res) => {
     let _date = req.params.date;
     let _part = req.params.part;
 
-    let temp;
+    let content = req.body;
 
-    let studentRef = admin.database().ref(`accounts/${req.body.id}`);
-    studentRef.once('value', function(snapshot) {
-        //console.log("value: ", snapshot);
+    let listRef = admin.database().ref(`schedule/${_date}/${_part}`);
 
-        temp = snapshot.val();
-        //console.log("temp: ", temp);
-        
-        let content = {
-            name: temp.name,
-            //key: temp.key?
-        };
-        //console.log("content", content);
-
-        let listRef = admin.database().ref(`schedule/${_date}/${_part}`);
-        listRef.push(content);
-        res.header('Content-Type', 'application/json; charset = utf-8');
-        res.status(201).send({result: "post complete"});
-    });
+    listRef.child(content.key).set(content);
+    res.header('Content-Type', 'application/json; charset = utf-8');
+    res.status(201).send({result: "post complete"});
 });
+router.delete('/:date/:part/:key', (req, res) => {
+    let _date = req.params.date;
+    let _part = req.params.part;
+    let _key = req.params.key;
+
+    let ref = admin.database().ref(`schedule/${_date}/${_part}/${_key}`);
+    ref.remove();
+    res.header('Content-Type', 'application/json; charset = utf-8');
+    res.status(201).send({result: "schedule delete complete"});
+})
 
 module.exports = router;
