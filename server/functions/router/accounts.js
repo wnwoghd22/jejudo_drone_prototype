@@ -18,11 +18,11 @@ router.get('/', (req, res) => {
 });
 router.get('/:key', (req, res) => {
     let key = req.params.key;
-    let listRef = admin.database().ref(`accounts/${key}`);
+    let listRef = admin.database().ref('accounts');
     listRef.once('value', function(snapshot) {
-        if(snapshot.exists) {
-            let item = snapshot.val();
-            item.id = snapshot.key;
+        if(snapshot.child(key).exists()) {
+            let item = snapshot.child(key).val();
+            item.id = key;
 
             res.header('Content-Type', 'application/json; charset = utf-8');
             res.send({account: item});
