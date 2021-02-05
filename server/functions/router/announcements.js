@@ -20,7 +20,6 @@ router.get('/:key', (req, res) => {
     let key = req.params.key;
     let listRef = admin.database().ref(`announcements/${key}`);
     listRef.once('value', function(snapshot) {
-        console.log("value: ", snapshot);
         let item = snapshot.val();
         item.id = snapshot.key;
         res.header('Content-Type', 'application/json; charset = utf-8');

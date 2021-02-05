@@ -47,14 +47,16 @@ router.get('/:key/schedule', (req, res) => {
     })
 });
 router.post('/', (req, res) => {
-    /*let data = {
+    let data = {
         name: req.body.name,
+        phoneNum: req.body.phoneNum,
+        curriculum: req.body.curriculum,
         authority: 'student',
         schedule: [],
-    };*/
-    let listRef = admin.database().ref('accounts');
-    listRef.child(req.body.id).child('name').set(req.body.name);
-    listRef.child(req.body.id).child('authority').set('student');
+    };
+    let ref = admin.database().ref('accounts');
+    ref.child(req.body.id).set(data);
+
     res.header('Content-Type', 'application/json; charset = utf-8');
     res.status(201).send({result: "create account complete"});
 });
@@ -75,9 +77,7 @@ router.post('/:key/schedule', (req, res) => {
                 }
             }
         });
-        console.log('flag: ', flag);
         if(!flag) {
-            console.log("new schedule");
             listRef.push(data);
         }
         res.header('Content-Type', 'application/json; charset = utf-8');
