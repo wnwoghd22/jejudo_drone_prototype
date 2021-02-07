@@ -91,8 +91,18 @@ router.post('/:key/schedule', (req, res) => {
 router.delete('/:key', (req, res) => {
     let key = req.params.key;
     let ref = admin.database().ref(`accounts/${key}`);
-    ref.remove();
-    res.status(201).send({result: "account delete complete"});
+
+    let scheduleRef = admin.database().ref(`accounts/${key}/schedule`);
+    scheduleRef.once('value', snapshot => {
+        snapshot.forEach(child => {
+            let tempRef = admin.database().ref(`schedule/${child.val().date}/${child.val().part}/${key}`);
+            tempRef.remove();
+        });
+
+        ref.remove();
+        res.send({result: "account delete complete"});
+    })
+
 });
 router.delete('/:key/schedule/:id', (req, res) => {
     let key = req.params.key;
