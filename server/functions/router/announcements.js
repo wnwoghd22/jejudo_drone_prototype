@@ -8,7 +8,14 @@ router.get('/', (req, res) => {
     listRef.once('value', function(snapshot) {
         let items = new Array();
         snapshot.forEach(function(childSnapshot) {
-            let contents = childSnapshot.val();
+            let temp = childSnapshot.val();
+            let contents = {
+                title: temp.title,
+                date: temp.date,
+                writer: {
+                    name: temp.writer.name,
+                }
+            }
             contents.id = childSnapshot.key;
             items.push(contents);
         })

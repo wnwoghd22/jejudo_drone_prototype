@@ -2,6 +2,19 @@ const admin = require('firebase-admin');
 const express = require('express');
 const router = express.Router();
 
+function equal(a, b) {
+    if(a.date.year === b.date.year) {
+        if(a.date.month === b.date.month) {
+            if(a.date.date === b.date.date) {
+                if(a.part === b.part) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
 //account/
 router.get('/', (req, res) => {
     let listRef = admin.database().ref('accounts');
@@ -40,11 +53,12 @@ router.get('/:key/schedule', (req, res) => {
         snapshot.forEach(function(childSnapshot) {
             let contents = childSnapshot.val();
             contents.id = childSnapshot.key;
+            
             items.push(contents);
-        })
+        });
         res.header('Content-Type', 'application/json; charset = utf-8');
         res.send({schedule: items});
-    })
+    });
 });
 router.post('/', (req, res) => {
     let data = {
@@ -61,24 +75,31 @@ router.post('/', (req, res) => {
     res.status(201).send({result: "create account complete"});
 });
 router.post('/:key/schedule', (req, res) => {
+    let _date = req.body.date
+    let _part = req.body.part
+
     let key = req.params.key;
     let data = {
-        date: req.body.date,
-        part: req.body.part,
+        date: _date,
+        part: _part,
     }
     let flag = false;
     let listRef = admin.database().ref(`accounts/${key}/schedule`);
     listRef.once('value', function(snapshot) {
-        snapshot.forEach(function(child) {
+        snapshot.forEach(child => {
             let temp = child.val();
-            if(temp.date === data.date) {
-                if(temp.part === data.part) {
-                    flag = true;
-                }
+            if(equal(temp, data)) {
+                flag = true;
             }
         });
         if(!flag) {
-            listRef.push(data);
+            let scheduleLef = admin.database().ref(`schedule/${_date.year}/${_date.month}/${_date.date}`);
+            scheduleLef.once('value', snapshot => {
+                let index = snapshot.val() !== null ? Object.keys(snapshot.val()).length : 0;
+                data.index = index;
+                
+                listRef.push(data);
+            });
         }
         res.header('Content-Type', 'application/json; charset = utf-8');
         res.send(
@@ -95,7 +116,8 @@ router.delete('/:key', (req, res) => {
     let scheduleRef = admin.database().ref(`accounts/${key}/schedule`);
     scheduleRef.once('value', snapshot => {
         snapshot.forEach(child => {
-            let tempRef = admin.database().ref(`schedule/${child.val().date}/${child.val().part}/${key}`);
+            let tempRef = admin.database().ref(
+                `schedule/${child.val().date.year}/${child.val().date.month}/${child.val().date.date}/${child.val().part}/${key}`);
             tempRef.remove();
         });
 
