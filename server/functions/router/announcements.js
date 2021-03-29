@@ -44,9 +44,15 @@ router.post('/', (req, res) => {
         body: req.body.body,
     };
     let listRef = admin.database().ref(`announcements`);
-    listRef.push(contents);
+    let keyRef = listRef.push(contents);
+    console.log(keyRef.key);
     res.header('Content-Type', 'application/json; charset = utf-8');
-    res.status(201).send({result: "post complete"});
+    res.send({ 
+        response : {
+            result: "post complete",
+            key: keyRef.key,
+        }
+    });
 });
 router.delete('/:key', (req, res) => {
     let key = req.params.key;
