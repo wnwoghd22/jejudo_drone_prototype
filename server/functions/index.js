@@ -8,8 +8,11 @@ const app = express();
 const cors = require('cors')({origin: true});
 app.use(cors);
 
-var CheckUser = require('./router/checkUser');
-app.use(CheckUser);
+//var CheckUser = require('./router/checkUser');
+//app.use(CheckUser);
+
+//var checkUser = require('./middleware/checkUser');
+//app.use('*', checkUser);
 
 var announcements = require('./router/announcements');
 var accounts = require('./router/accounts');
