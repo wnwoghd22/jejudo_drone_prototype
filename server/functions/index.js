@@ -14,12 +14,12 @@ app.use(cors);
 //var checkUser = require('./middleware/checkUser');
 //app.use('*', checkUser);
 
-var announcements = require('./router/announcements');
-var accounts = require('./router/accounts');
-var schedule = require('./router/schedule');
+var notice = require('./router/Notice/route');
+var user = require('./router/User/route');
+var schedule = require('./router/Schedule/route');
 
-app.use('/announcements', announcements);
-app.use('/accounts', accounts);
+app.use('/notice', notice);
+app.use('/accounts', user);
 app.use('/schedule', schedule);
 
 exports.v1 = functions.https.onRequest(app);
