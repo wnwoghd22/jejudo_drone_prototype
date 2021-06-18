@@ -5,6 +5,7 @@ const anonymous = {
     name : "Anonymous"
 }
 const checkUser = (req, res, next) => {
+    console.log(req);
     if(req.query.auth_token != undefined) {
         let idToken = req.query.auth_token;
         admin.auth().verifyIdToken(idToken).then(decodedToken => {
@@ -16,12 +17,12 @@ const checkUser = (req, res, next) => {
             next();
         }).catch(error => {
             console.log(error);
-            //next();
+            return; //next();
         });
     }
     else {
         console.log(req.query.auth_token);
-        //next();
+        return; //next();
     }
 }
 
